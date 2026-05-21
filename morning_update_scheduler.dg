@@ -1,0 +1,8 @@
+day = zoho.currentdate.toString("EEEE");
+if(day == "Sunday")
+{
+	return;
+}
+msg = Map();
+msg.put("text","🌞 Good morning team!\n\nPlease update the tasks for today !! .");
+zoho.cliq.postToChannel("dailytaskst",msg);

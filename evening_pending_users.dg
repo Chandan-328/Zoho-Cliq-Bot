@@ -1,0 +1,27 @@
+day = zoho.currentdate.toString("EEEE");
+// "Sunday", "Monday", etc.
+if(day != "Sunday")
+{
+	// Call Apps Script to get pending users
+	resp = invokeurl
+	[
+		url :"https://script.google.com/macros/s/YOUR_EVENING_SCRIPT_ID/exec?action=getPending"
+		type :GET
+	];
+	pending_users = resp.toList();
+	text = "";
+	if(pending_users.size() > 0)
+	{
+		text = "Please update today's tasks !!:\n\n";
+		for each  u in pending_users
+		{
+			text = text + "<@" + u + "> ";
+		}
+	}
+	else
+	{
+		text = "✅ Great job! Everyone updated their tasks today 🎉";
+	}
+	// Post directly to the channel
+	zoho.cliq.postToChannel("dailytaskst",{"text":text});
+}

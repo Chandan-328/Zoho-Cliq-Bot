@@ -1,0 +1,68 @@
+response = Map();
+if(operation.equals("message_sent"))
+{
+	// 🔹 Get message safely
+	msg = data.get("text");
+	if(msg == null)
+	{
+		messageMap = data.get("message");
+		if(messageMap != null)
+		{
+			msg = messageMap.get("text");
+		}
+	}
+	// 🔹 Stop if no message
+	if(msg == null)
+	{
+		return response;
+	}
+	// 🔹 Get user details (safe)
+	userName = user.get("name");
+	if(userName == null)
+	{
+		userName = user.get("first_name") + " " + user.get("last_name");
+	}
+	userId = user.get("id");
+	// 🔒 Check command
+	if(msg.toLowerCase().startsWith("#update"))
+	{
+		// 🔹 Clean task
+		task = msg.replaceAll("(?i)#update","").trim();
+		if(task == "")
+		{
+			response.put("text","❌ Please write task after #update");
+			return response;
+		}
+		// 🔹 Time logic (SAFE)
+		timeStr = zoho.currenttime.toString("HH:mm");
+		hour = timeStr.subString(0,2).toLong();
+		// 🔹 URLs
+		morning_url = "https://script.google.com/macros/s/YOUR_MORNING_SCRIPT_ID/exec";
+		evening_url = "https://script.google.com/macros/s/YOUR_EVENING_SCRIPT_ID/exec";
+		url = "";
+		// 🔹 Routing
+		if(hour >= 8 && hour < 15)
+		{
+			url = morning_url;
+		}
+		else if(hour >= 15 && hour < 23)
+		{
+			url = evening_url;
+		}
+		else
+		{
+			response.put("text","❌ Updates allowed between 8 AM – 11 PM");
+			return response;
+		}
+		// 🔹 Send to Apps Script
+		url = url + "?user_name=" + encodeUrl(userName) + "&user_id=" + userId + "&task=" + encodeUrl(task);
+		resp = invokeurl
+		[
+			url :url
+			type :GET
+		];
+		// ✅ Success response
+		response.put("text","✅ Task update logged for @" + userName);
+	}
+}
+return response;
