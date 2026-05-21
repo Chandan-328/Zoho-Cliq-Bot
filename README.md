@@ -12,7 +12,7 @@ Here is how the components interact:
 graph TD
     User([User in Cliq Channel]) -- "Sends #update <task>" --> Handler[participation_handler.dg]
     
-    subgraph Zoho Cliq Environment
+    subgraph "Zoho Cliq Environment"
         Handler
         M_Sched[morning_update_scheduler.dg]
         E_Sched[evening_update_scheduler.dg]
@@ -20,12 +20,12 @@ graph TD
         E_Pend[evening_pending_users.dg]
     end
 
-    subgraph Google Apps Script (Web APIs)
+    subgraph "Google Apps Script (Web APIs)"
         M_Script[morning_sheet_api.js]
         E_Script[evening_sheet_api.js]
     end
 
-    subgraph Google Sheets Database
+    subgraph "Google Sheets Database"
         M_Sheet[(Morning Spreadsheet)]
         E_Sheet[(Evening Spreadsheet)]
     end
